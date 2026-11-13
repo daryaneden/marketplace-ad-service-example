@@ -6,9 +6,9 @@ class Settings(BaseSettings):
 
     postgres_username: str
     postgres_password: str
-    postgres_host: str 
-    postgres_port: int 
-    postgres_database_name: str 
+    postgres_host: str
+    postgres_port: int
+    postgres_database_name: str
     jwt_secret: str = "change-me"
     jwt_algorithm: str = "HS256"
     kafka_bootstrap_servers: str = "localhost:9092"
