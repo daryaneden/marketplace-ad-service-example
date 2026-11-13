@@ -169,7 +169,7 @@ async def main() -> None:
         total_needed = len(users) * ADS_PER_USER
         if total_needed > len(items):
             raise RuntimeError(
-                f"need {total_needed} unique items" 
+                f"need {total_needed} unique items"
                 f"but only {len(items)} are defined in {SEED_FILE}; "
                 f"reduce SEED_ADS_PER_USER or add more items"
             )
