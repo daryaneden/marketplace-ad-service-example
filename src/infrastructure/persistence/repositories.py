@@ -41,7 +41,8 @@ class SQLAlchemyAdRepository(AdRepository):
         ad_id: int,
     ) -> Ad | None:
         query = select(AdModel).where(AdModel.id == ad_id)
-        model = await self._session.execute(query)
+        result = await self._session.execute(query)
+        model = result.scalar_one_or_none()
         if model is None:
             return None
         return _to_entity(model)
