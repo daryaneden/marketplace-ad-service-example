@@ -26,4 +26,4 @@ RUN uv sync --frozen --no-dev
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "uv run alembic upgrade head && uv run python -m bin.api"]
+CMD ["sh", "-c", "uv run alembic upgrade head && uv run python -m bin.outbox & exec uv run python -m bin.api"]
