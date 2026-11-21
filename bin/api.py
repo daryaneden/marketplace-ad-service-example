@@ -1,7 +1,10 @@
 import uvicorn
 
 from src.fastapi import create_app
+from src.trace_context import configure_trace_logging, configure_uvicorn_logging
 
+configure_trace_logging()
+configure_uvicorn_logging()
 app = create_app()
 
 if __name__ == "__main__":
@@ -10,6 +13,5 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         reload=True,
-        access_log=True,
         log_level="info",
     )

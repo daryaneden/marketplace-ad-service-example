@@ -20,6 +20,8 @@ class CreateAdPort(ABC):
         price: int,
         category: str,
         city: str,
+        *,
+        trace_id: str | None = None,
     ) -> Ad: ...
 
 
@@ -34,6 +36,8 @@ class UpdateAdPort(ABC):
         price: int | None,
         category: str | None,
         city: str | None,
+        *,
+        trace_id: str | None = None,
     ) -> Ad: ...
 
 
@@ -43,6 +47,8 @@ class DeleteAdPort(ABC):
         self,
         ad_id: int,
         user_id: int,
+        *,
+        trace_id: str | None = None,
     ) -> None: ...
 
 

@@ -16,6 +16,7 @@ from src.presentation.api.schemas import (
     MyAdsResponse,
     UpdateAdRequest,
 )
+from src.trace_context import get_trace_id
 
 router = APIRouter(prefix="/ads", tags=["ads"])
 
@@ -85,6 +86,7 @@ async def create_ad(
         price=body.price,
         category=body.category,
         city=body.city,
+        trace_id=get_trace_id(),
     )
     return AdResponse.from_entity(ad)
 
@@ -105,6 +107,7 @@ async def update_ad(
             price=body.price,
             category=body.category,
             city=body.city,
+            trace_id=get_trace_id(),
         )
     except AdNotFoundError:
         raise HTTPException(
@@ -126,7 +129,9 @@ async def delete_ad(
     usecase: DeleteAdDep,
 ) -> Response:
     try:
-        await usecase.execute(ad_id=ad_id, user_id=current_user_id)
+        await usecase.execute(
+            ad_id=ad_id, user_id=current_user_id, trace_id=get_trace_id()
+        )
     except AdNotFoundError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

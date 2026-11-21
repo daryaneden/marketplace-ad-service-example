@@ -23,9 +23,9 @@ async def test_relay_sends_and_marks_published(
     processed = await relay._process_batch()
 
     assert processed == 2
-    assert fake_broker.sent == [
-        {"event": "ad.created", "payload": {"ad_id": 1}},
-        {"event": "ad.updated", "payload": {"ad_id": 1}},
+    assert [(item["event"], item["payload"]["ad_id"]) for item in fake_broker.sent] == [
+        ("ad.created", 1),
+        ("ad.updated", 1),
     ]
     assert fake_uow.committed
     assert fake_uow.outbox.messages == []

@@ -17,6 +17,8 @@ class UpdateAd(UpdateAdPort):
         price: int | None,
         category: str | None,
         city: str | None,
+        *,
+        trace_id: str | None = None,
     ) -> Ad:
         async with self._uow as uow:
             ad = await uow.ads.get_by_id(ad_id)
@@ -32,6 +34,9 @@ class UpdateAd(UpdateAdPort):
                 city=city if city is not None else ad.city,
             )
             await uow.ads.save(ad)
-            await uow.outbox.add("ad.updated", {"ad_id": ad.id})
+            payload: dict[str, int | str] = {"ad_id": ad.id}
+            if trace_id is not None:
+                payload["trace_id"] = trace_id
+            await uow.outbox.add("ad.updated", payload)
             await uow.commit()
         return ad

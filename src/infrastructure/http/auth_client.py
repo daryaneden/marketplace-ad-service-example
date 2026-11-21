@@ -4,6 +4,7 @@ import urllib.parse
 import httpx
 
 from src.application.ports.user_profile import UserInfo, UserProfileService
+from src.trace_context import TRACE_HEADER, get_trace_id
 
 logger = logging.getLogger(__name__)
 
@@ -15,10 +16,12 @@ class AuthServiceUserProfileService(UserProfileService):
 
     async def user(self, user_id: int) -> UserInfo | None:
         url = urllib.parse.urljoin(self._base_url, f"internal/users/{user_id}")
+        trace_id = get_trace_id()
+        headers = {TRACE_HEADER: trace_id} if trace_id is not None else None
         try:
-            resp = await self._client.get(url)
+            resp = await self._client.get(url, headers=headers)
         except httpx.HTTPError as exc:
-            logger.warning("failed to fetch user %s: %s", user_id, exc)
+            logger.warning("failed to fetch user %s: %s", user_id, type(exc).__name__)
             return None
         if resp.status_code != 200:
             return None

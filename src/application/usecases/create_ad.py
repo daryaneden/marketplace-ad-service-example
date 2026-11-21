@@ -15,6 +15,8 @@ class CreateAd(CreateAdPort):
         price: int,
         category: str,
         city: str,
+        *,
+        trace_id: str | None = None,
     ) -> Ad:
         async with self._uow:
             ad = await self._uow.ads.create(
@@ -25,6 +27,9 @@ class CreateAd(CreateAdPort):
                 category=category,
                 city=city,
             )
-            await self._uow.outbox.add("ad.created", {"ad_id": ad.id})
+            payload: dict[str, int | str] = {"ad_id": ad.id}
+            if trace_id is not None:
+                payload["trace_id"] = trace_id
+            await self._uow.outbox.add("ad.created", payload)
             await self._uow.commit()
         return ad
